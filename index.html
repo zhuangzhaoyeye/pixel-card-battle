@@ -233,6 +233,16 @@
     opacity: 0.5;
   }
 
+  /* 底部操作栏 */
+  .bottom-actions {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin-top: auto;
+    padding-top: 10px;
+  }
+
   /* 角色立绘区域 */
   .character-art {
     width: 100%;
@@ -723,26 +733,67 @@
 
   /* 响应式 */
   @media (max-width: 768px) {
-    .screen { padding: 10px; }
-    .battle-arena { flex-direction: column; gap: 10px; }
-    .vs-container { font-size: clamp(24px, 6vw, 36px); }
-    .battle-arena { margin-bottom: 10px; }
-    .log-entry { margin: 4px 0; padding: 5px; font-size: 10px; }
-    .card-name { font-size: clamp(12px, 3.5vw, 16px); }
-    .card-stats { font-size: clamp(9px, 2.5vw, 11px); }
-    .element-tag { font-size: clamp(8px, 2vw, 10px); padding: 3px 8px; }
-    .bar-header { font-size: clamp(9px, 2.5vw, 11px); }
-    .bar-track { height: 10px; }
-    .fighter-info { margin-bottom: 8px; }
-    .cyber-bar { margin: 6px 0; }
-    .damage-popup { font-size: clamp(24px, 8vw, 36px); }
-    .damage-crit { font-size: clamp(32px, 10vw, 48px); }
+    .screen { padding: 8px; padding-bottom: 70px; }
+    .battle-arena { flex-direction: row; gap: 8px; margin-bottom: 8px; }
+    .vs-container { font-size: clamp(20px, 5vw, 28px); }
+    .battle-arena { margin-bottom: 8px; }
+    .log-entry { margin: 2px 0; padding: 3px; font-size: 9px; }
+    .card-name { font-size: clamp(10px, 2.8vw, 14px); }
+    .card-stats { font-size: clamp(8px, 2vw, 10px); gap: 2px; }
+    .element-tag { font-size: clamp(7px, 1.8vw, 9px); padding: 2px 6px; margin-top: 6px; }
+    .bar-header { font-size: clamp(8px, 2vw, 10px); }
+    .bar-track { height: 8px; }
+    .fighter-info { margin-bottom: 4px; }
+    .cyber-bar { margin: 4px 0; }
+    .damage-popup { font-size: clamp(20px, 6vw, 30px); }
+    .damage-crit { font-size: clamp(26px, 8vw, 40px); }
     .cyber-card:hover { transform: none; }
     .skill-btn:hover:not(:disabled) { transform: none; }
+    
+    /* 选卡界面首屏优化 */
+    #select-screen { padding-top: 8px; }
+    #select-screen h2 { margin: 8px 0; font-size: clamp(16px, 4vw, 22px); }
+    .card-grid { 
+      grid-template-columns: repeat(3, 1fr); 
+      gap: 6px; 
+      margin: 6px 0;
+    }
+    .cyber-card { padding: 6px; }
+    .character-art { height: clamp(50px, 14vw, 70px); margin-bottom: 4px; }
+    .character-icon { font-size: clamp(24px, 7vw, 36px); }
+    .card-stats { grid-template-columns: 1fr 1fr; }
+    
+    /* 战斗界面首屏优化 */
+    #battle-screen { padding: 6px; padding-bottom: 65px; }
+    .battle-header { padding: 6px; margin-bottom: 6px; }
+    .fighter-portrait { height: clamp(60px, 16vw, 90px); margin-bottom: 4px; }
+    .fighter-sprite { font-size: clamp(30px, 10vw, 50px); }
+    .fighter-panel { padding: 6px; }
+    .fighter-name { font-size: clamp(11px, 3vw, 14px); }
+    .battle-log { height: 50px; padding: 6px; font-size: 9px; margin-bottom: 8px; }
+    .skill-grid { gap: 6px; margin-bottom: 8px; }
+    .skill-btn { padding: 6px; }
+    .skill-name { font-size: clamp(9px, 2.5vw, 12px); margin-bottom: 2px; }
+    .skill-desc { font-size: clamp(7px, 1.8vw, 9px); }
+    .skill-cost { bottom: 4px; right: 5px; font-size: clamp(7px, 2vw, 9px); }
+    
+    /* 底部按钮固定 */
+    .bottom-actions {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      padding: 8px;
+      background: linear-gradient(to top, var(--dark-bg) 80%, transparent);
+      z-index: 50;
+      display: flex;
+      gap: 8px;
+      justify-content: center;
+    }
   }
 
   @media (max-width: 380px) {
-    .card-grid { grid-template-columns: 1fr; }
+    .card-grid { grid-template-columns: repeat(2, 1fr); gap: 5px; }
     .skill-grid { grid-template-columns: 1fr; }
   }
 </style>
@@ -759,14 +810,14 @@
 <!-- 选卡界面 -->
 <div id="select-screen" class="screen">
   <h2 class="neon-text">选择战斗单位</h2>
-  <p style="font-size: 12px; color: var(--neon-purple); margin-bottom: 20px;">
-    已选择 <span id="select-count" style="color: var(--neon-cyan); font-size: 18px;">0</span> / 3 个单位
+  <p style="font-size: clamp(10px, 2.5vw, 12px); color: var(--neon-purple); margin-bottom: 8px;">
+    已选 <span id="select-count" style="color: var(--neon-cyan);">0</span>/3
   </p>
   <div class="card-grid" id="card-grid"></div>
-  <div style="display: flex; gap: 10px; margin-top: 20px; flex-wrap: wrap; justify-content: center;">
-    <button class="cyber-btn" onclick="showScreen('start')" style="padding: 12px 25px; font-size: 13px;">返回</button>
-    <button class="cyber-btn" id="btn-confirm" onclick="startBattle()" disabled style="padding: 12px 25px; font-size: 13px;">
-      启动战斗序列
+  <div class="bottom-actions">
+    <button class="cyber-btn" onclick="showScreen('start')" style="padding: 10px 20px; font-size: 12px;">返回</button>
+    <button class="cyber-btn" id="btn-confirm" onclick="startBattle()" disabled style="padding: 10px 20px; font-size: 12px;">
+      开始战斗
     </button>
   </div>
 </div>
@@ -788,7 +839,7 @@
   </div>
   
   <div class="battle-log" id="battle-log"></div>
-  <div class="skill-grid" id="skill-panel"></div>
+  <div class="skill-grid bottom-actions" id="skill-panel"></div>
 </div>
 
 <!-- 结果界面 -->
