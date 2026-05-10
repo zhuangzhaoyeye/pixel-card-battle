@@ -41,6 +41,12 @@ html, body { width:100%; height:100%; overflow:hidden; font-family:'Orbitron',sa
   padding:4px 8px; z-index:10; flex-shrink:0;
   background:linear-gradient(180deg, rgba(20,0,40,0.9), transparent);
 }
+/* BOTTOM BAR - Player Info */
+#player-bar {
+  display:flex; align-items:center; justify-content:space-between;
+  padding:4px 8px; z-index:10; flex-shrink:0;
+  background:linear-gradient(0deg, rgba(20,0,40,0.9), transparent);
+}
 .lp-display {
   font-size:11px; font-weight:700;
   text-shadow:0 0 10px var(--neon-pink);
@@ -551,6 +557,15 @@ html, body { width:100%; height:100%; overflow:hidden; font-family:'Orbitron',sa
 
   <!-- Hand -->
   <div id="hand-area"><div id="hand"></div></div>
+
+  <!-- Player Bar -->
+  <div id="player-bar">
+    <div class="lp-display" id="player-lp">LP: <span>4000</span></div>
+    <div class="deck-info">
+      <div>卡组: <span id="player-deck-count">15</span></div>
+      <div>墓地: <span id="player-grave-count">0</span></div>
+    </div>
+  </div>
 
   <!-- Actions -->
   <div id="actions">
@@ -1839,8 +1854,10 @@ function renderDeckCounts() {
   document.getElementById('egc').textContent = G.enemyGrave.length;
   document.getElementById('pdc').textContent = G.playerDeck.length;
   document.getElementById('pgc').textContent = G.playerGrave.length;
-  document.getElementById('enemy-deck-count').textContent = G.enemyDeck.length;
-  document.getElementById('enemy-grave-count').textContent = G.enemyGrave.length;
+  const pdc2 = document.getElementById('player-deck-count');
+  const pgc2 = document.getElementById('player-grave-count');
+  if(pdc2) pdc2.textContent = G.playerDeck.length;
+  if(pgc2) pgc2.textContent = G.playerGrave.length;
 }
 
 function renderMonsterZone(who) {
